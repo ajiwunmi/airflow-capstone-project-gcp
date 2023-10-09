@@ -93,3 +93,7 @@ pgbouncer:
   ## if the pgbouncer Deployment is created
   ##
   enabled: false
+
+
+#https://medium.com/@olivertosky/deploying-apache-airflow-to-google-kubernetes-engine-a72c7db912ee#:~:text=Note%3A%20If%20you%20decide%20to,yaml%20airflow%20.
+#helm upgrade -f values.yaml airflow

@@ -50,12 +50,14 @@ dags:
     ##  # ssh git repo
     ##  repo: “git@github.com:USERNAME/REPOSITORY.git”
     ##
-    repo: "https://github.com/wizelineacademy/Google-Africa-DEB"
+    # repo: "https://github.com/wizelineacademy/Google-Africa-DEB"
+    repo: "https://github.com/ajiwunmi/airflow-capstone-project-gcp"
     ## the sub-path within your repo where dags are located
     ## - only dags under this path within your repo will be seen by airflow,
     ##  (note, the full repo will still be cloned)
     ##
-    repoSubPath: "session_04/exercises/airflow-gke/dags"
+    repoSubPath: "dags"
+    #repoSubPath: "session_04/exercises/airflow-gke/dags"
     ## the git branch to check out
     ##
     branch: main
