@@ -23,21 +23,21 @@ STABILITY_STATE = "unstable"
 CLOUD_PROVIDER = "gcp"
 
 # GCP constants
-GCP_CONN_ID = "google_cloud_default"
-GCS_BUCKET_NAME = "africa-deb-bucket-second"
+GCP_CONN_ID = "google_cloud_conn"
+GCS_BUCKET_NAME = "de-captone-poject-bucket"
 GCS_KEY_NAME = "chart-data.csv"
 
 # Postgres constants
-POSTGRES_CONN_ID = "google-demo-session-6-conn"
-POSTGRES_TABLE_NAME = "chart_data"
+POSTGRES_CONN_ID = "postgres_conn"
+POSTGRES_TABLE_NAME = "dbcapstone"
 
 
 def ingest_data_from_gcs(
     gcs_bucket: str,
     gcs_object: str,
     postgres_table: str,
-    gcp_conn_id: str = "google_cloud_default",
-    postgres_conn_id: str = "google-demo-session-6-conn",
+    gcp_conn_id: str = "google_cloud_conn",
+    postgres_conn_id: str = "postgres_conn",
 ):
     """Ingest data from an GCS location into a postgres table.
 
