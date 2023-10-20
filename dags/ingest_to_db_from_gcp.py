@@ -24,7 +24,7 @@ CLOUD_PROVIDER = "gcp"
 # GCP constants
 GCP_CONN_ID = "google_cloud_conn_id"
 GCS_BUCKET_NAME = "de-captone-poject-bucket"
-GCS_KEY_NAME = "datasets/user_purchase.csv"
+GCS_KEY_NAME = "dataset/user_purchase.csv"
 
 # Postgres constants
 POSTGRES_CONN_ID = "postgres_conn_id"
