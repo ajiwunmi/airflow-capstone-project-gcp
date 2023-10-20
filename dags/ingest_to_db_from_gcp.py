@@ -35,7 +35,7 @@ GCS_BUCKET_NAME = "de-captone-poject-bucket"
 GCS_KEY_NAME = "dataset/user_purchase.csv"
 GCS_FILE_NAME = "dataset/user_purchase.csv" 
 #gs://de-captone-poject-bucket/dataset/user_purchase.csv | https://storage.cloud.google.com/de-captone-poject-bucket/dataset/user_purchase.csv
-GCS_STAGING_FILE_NAME = "staging/user_purchase.csv"
+GCS_STAGING_FILE_NAME = "staging_area/user_purchase.csv"
 
 # Postgres constants
 POSTGRES_CONN_ID = "postgres_conn_id_2"
