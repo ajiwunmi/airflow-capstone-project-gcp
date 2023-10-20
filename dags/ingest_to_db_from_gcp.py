@@ -79,14 +79,14 @@ with DAG(
     create_schema_query = f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};"
     create_table_query = f"""
         CREATE TABLE IF NOT EXISTS {SCHEMA_NAME}.{POSTGRES_TABLE_NAME}  (
-            invoice_number VARCHAR(20),
+            invoice_number VARCHAR,
             stock_code VARCHAR(30),
             detail VARCHAR(1000),
             quantity INT,
             invoice_date TIMESTAMP,
             unit_price NUMERIC(8,3),
             customer_id INT,
-            country VARCHAR(20)
+            country VARCHAR(30)
         );
     """
 
