@@ -27,9 +27,9 @@ GCS_BUCKET_NAME = "de-captone-poject-bucket"
 GCS_KEY_NAME = "dataset/user_purchase.csv"
 
 # Postgres constants
-POSTGRES_CONN_ID = "postgres_conn_id"
+POSTGRES_CONN_ID = "postgres_conn_id_2"
 POSTGRES_TABLE_NAME = "user_purchase"
-SCHEMA_NAME = "de-capstone-project"
+SCHEMA_NAME = "decapstone"
 
 
 def ingest_data_from_gcs(
