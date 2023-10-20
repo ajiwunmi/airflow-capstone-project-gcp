@@ -95,7 +95,7 @@ def data_wrangling():
     # )
     
     # Load data from the local file and perform data wrangling
-    file_path = gcs_to_local
+    file_path = '/dataset/user_purchase.csv'
     df = pd.read_csv(file_path)
 
     # Data wrangling steps
