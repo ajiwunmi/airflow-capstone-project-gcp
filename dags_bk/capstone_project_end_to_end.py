@@ -16,14 +16,14 @@ schema_name = 'your_schema_name'
 create_schema_query = f"CREATE SCHEMA IF NOT EXISTS {schema_name};"
 create_table_query = f"""
     CREATE TABLE IF NOT EXISTS {schema_name}.user_purchase (
-        invoice_number VARCHAR(10),
+        invoice_number VARCHAR(20),
         stock_code VARCHAR(20),
         detail VARCHAR(1000),
         quantity INT,
         invoice_date TIMESTAMP,
         unit_price NUMERIC(8,3),
         customer_id INT,
-        country VARCHAR(20)
+        country VARCHAR(30)
     );
 """
 
