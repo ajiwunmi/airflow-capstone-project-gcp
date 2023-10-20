@@ -76,6 +76,7 @@ def ingest_data_from_gcs(
 def data_wrangling():
     # Read the CSV file from Google Cloud Storage
     gcs_to_local_task = GCSToLocalFilesystemOperator(
+        task_id='read_gcs_data',
         bucket=GCS_BUCKET_NAME,
         object_name=GCS_KEY_NAME,
         filename=GCS_FILE_NAME,
