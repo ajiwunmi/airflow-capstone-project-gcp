@@ -41,7 +41,7 @@ POSTGRES_CONN_ID = "postgres_conn_id_2"
 POSTGRES_TABLE_NAME = "user_purchase"
 SCHEMA_NAME = "decapstone"
 
-
+ 
 def ingest_data_from_gcs(
     gcs_bucket: str,
     gcs_object: str,
@@ -76,13 +76,21 @@ def ingest_data_from_gcs(
 def data_wrangling():
     # Read the CSV file from Google Cloud Storage
     gcs_to_local_task = GCSToLocalFilesystemOperator(
-        task_id='read_gcs_data',
-        bucket_name=GCS_BUCKET_NAME,
+        bucket=GCS_BUCKET_NAME,
         object_name=GCS_KEY_NAME,
         filename=GCS_FILE_NAME,
         gcp_conn_id=GCP_CONN_ID,
-        dag=dag,
     )
+
+    # f = GCSToLocalFilesystemOperator(
+	# bucket=MY_BUCKET,
+	# object_name="None",
+	# filename="None",
+	# store_to_xcom_key="None",
+	# gcp_conn_id="google_cloud_default",
+	# impersonation_chain="None",
+	# file_encoding="utf-8",
+    # )
     
     # Load data from the local file and perform data wrangling
     file_path = GCS_FILE_NAME
@@ -119,8 +127,6 @@ with DAG(
     data_wrangling= PythonOperator(
         task_id='data_wrangling',
         python_callable=data_wrangling,
-        # provide_context=True,
-        dag=dag,
         trigger_rule=TriggerRule.ONE_SUCCESS,
     )
 
