@@ -16,6 +16,14 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.utils.dates import days_ago
 from airflow.utils.trigger_rule import TriggerRule
 
+from airflow.providers.google.cloud.transfers.gcs_to_local import GCSToLocalFilesystemOperator
+from datetime import datetime
+import pandas as pd
+from io import StringIO
+
+
+
+
 # General constants
 DAG_ID = "gcp_database_ingestion_workflow"
 STABILITY_STATE = "unstable"
@@ -25,6 +33,8 @@ CLOUD_PROVIDER = "gcp"
 GCP_CONN_ID = "google_cloud_conn_id"
 GCS_BUCKET_NAME = "de-captone-poject-bucket"
 GCS_KEY_NAME = "dataset/user_purchase.csv"
+GCS_FILE_NAME = "/dataset/user_purchase.csv"
+GCS_STAGING_FILE_NAME = "/staging/user_purchase.csv"
 
 # Postgres constants
 POSTGRES_CONN_ID = "postgres_conn_id_2"
@@ -60,12 +70,42 @@ def ingest_data_from_gcs(
         psql_hook.bulk_load(table=postgres_table, tmp_file=tmp.name)
 
 
+
+
+# Define a function to perform data wrangling
+def data_wrangling():
+    # Read the CSV file from Google Cloud Storage
+    gcs_to_local_task = GCSToLocalFilesystemOperator(
+        task_id='read_gcs_data',
+        bucket_name=GCS_BUCKET_NAME,
+        object_name=GCS_KEY_NAME,
+        filename=GCS_FILE_NAME,
+        gcp_conn_id=GCP_CONN_ID,
+        dag=dag,
+    )
+    
+    # Load data from the local file and perform data wrangling
+    file_path = GCS_FILE_NAME
+    df = pd.read_csv(file_path)
+
+    # Data wrangling steps
+    df = df.dropna()  # Remove null values
+    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
+
+    # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
+    df.to_csv(GCS_STAGING_FILE_NAME, index=False)
+    cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
+    # cleaned_data = StringIO(cleaned_data)
+
+   
+
 with DAG(
     dag_id=DAG_ID,
     schedule_interval="@once",
     start_date=days_ago(1),
     tags=[CLOUD_PROVIDER, STABILITY_STATE],
 ) as dag:
+    
     start_workflow = DummyOperator(task_id="start_workflow")
 
     verify_key_existence = GCSObjectExistenceSensor(
@@ -74,6 +114,15 @@ with DAG(
         bucket=GCS_BUCKET_NAME,
         object=GCS_KEY_NAME,
     )
+
+    # Perform data wrangling
+    data_wrangling= PythonOperator(
+        task_id='data_wrangling',
+        python_callable=data_wrangling,
+        # provide_context=True,
+        dag=dag,
+    )
+
 
     # Define schema and table creation SQL queries
     create_schema_query = f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};"
@@ -103,6 +152,7 @@ with DAG(
     )
     continue_process = DummyOperator(task_id="continue_process")
 
+    # Ingest data from GCS to Postgres
     ingest_data = PythonOperator(
         task_id="ingest_data",
         python_callable=ingest_data_from_gcs,
@@ -115,6 +165,13 @@ with DAG(
         },
         trigger_rule=TriggerRule.ONE_SUCCESS,
     )
+
+    # load_data_task = PythonOperator(
+    # task_id='load_data_to_postgres',
+    # python_callable=load_data_to_postgres,
+    # dag=dag,
+    # )
+
 
     validate_data = BranchSQLOperator(
         task_id="validate_data",
@@ -132,7 +189,7 @@ with DAG(
         >> create_table_entity
         >> validate_data
     )
-    validate_data >> [clear_table, continue_process] >> ingest_data
-    ingest_data >> end_workflow
+    validate_data >> [clear_table, continue_process] >> data_wrangling >> ingest_data
+    data_wrangling >> ingest_data >> end_workflow
 
     dag.doc_md = __doc__
