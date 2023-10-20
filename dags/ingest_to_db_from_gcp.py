@@ -121,6 +121,7 @@ with DAG(
         python_callable=data_wrangling,
         # provide_context=True,
         dag=dag,
+        # trigger_rule=TriggerRule.ONE_SUCCESS,
     )
 
 
