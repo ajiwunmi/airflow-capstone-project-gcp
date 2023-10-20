@@ -121,7 +121,7 @@ with DAG(
         python_callable=data_wrangling,
         # provide_context=True,
         dag=dag,
-        # trigger_rule=TriggerRule.ONE_SUCCESS,
+        trigger_rule=TriggerRule.ONE_SUCCESS,
     )
 
 
@@ -164,7 +164,7 @@ with DAG(
             "gcs_object": GCS_KEY_NAME,
             "postgres_table":f"{SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
         },
-        trigger_rule=TriggerRule.ONE_SUCCESS,
+        # trigger_rule=TriggerRule.ONE_SUCCESS,
     )
 
     # load_data_task = PythonOperator(
