@@ -1,0 +1,1 @@
+select * from capstone_schema.user_purchase;
