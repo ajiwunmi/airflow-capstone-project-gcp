@@ -4,7 +4,7 @@ Author: Enrique Olivares <enrique.olivares@wizeline.com>
 
 Description: Ingests the data from a GCS bucket into a postgres table.
 """
-pip install gcsfs
+# pip install gcsfs
 from airflow.models import DAG
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
@@ -20,7 +20,7 @@ from airflow.providers.google.cloud.transfers.gcs_to_local import GCSToLocalFile
 from datetime import datetime
 import pandas as pd
 from io import StringIO
-import gcsfs
+# import gcsfs
 
 
 
@@ -35,6 +35,7 @@ GCP_CONN_ID = "google_cloud_conn_id"
 GCS_BUCKET_NAME = "de-captone-poject-bucket"
 GCS_KEY_NAME = "dataset/user_purchase.csv"
 GCS_FILE_NAME = "dataset/user_purchase.csv" 
+TEMP_FILE_NAME = "tmp/user_purchase.csv" 
 #gs://de-captone-poject-bucket/dataset/user_purchase.csv | https://storage.cloud.google.com/de-captone-poject-bucket/dataset/user_purchase.csv
 GCS_STAGING_FILE_NAME = "staging_area/user_purchase.csv"
 
@@ -81,7 +82,7 @@ def data_wrangling():
         task_id='read_gcs_data',
         bucket=GCS_BUCKET_NAME,
         object_name=GCS_KEY_NAME,
-        filename=GCS_FILE_NAME,
+        filename=TEMP_FILE_NAME,
         gcp_conn_id=GCP_CONN_ID,
     )
 
@@ -96,20 +97,20 @@ def data_wrangling():
     # )
     
     # Load data from the local file and perform data wrangling
-    file_path =f"gs://{GCS_BUCKET_NAME}/{GCS_KEY_NAME}" #gs://mybucket/myfile.csv.
-    fs = gcsfs.GCSFileSystem(project=PROJECT_NAME)
-    with fs.open(f"{GCS_BUCKET_NAME}/{GCS_KEY_NAME}") as f:
-        df = pd.read_csv(f)
-        # df = pd.read_csv(file_path)
+    # file_path =f"gs://{GCS_BUCKET_NAME}/{GCS_KEY_NAME}" #gs://mybucket/myfile.csv.
+    # fs = gcsfs.GCSFileSystem(project=PROJECT_NAME)
+    # with fs.open(f"{GCS_BUCKET_NAME}/{GCS_KEY_NAME}") as f:
+    # df = pd.read_csv(f)
+    df = pd.read_csv(TEMP_FILE_NAME)
 
-        # Data wrangling steps
-        df = df.dropna()  # Remove null values
-        df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
+    # Data wrangling steps
+    df = df.dropna()  # Remove null values
+    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
 
-        # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
-        df.to_csv(GCS_STAGING_FILE_NAME, index=False)
-        cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
-        # cleaned_data = StringIO(cleaned_data)
+    # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
+    df.to_csv(GCS_STAGING_FILE_NAME, index=False)
+    cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
+    # cleaned_data = StringIO(cleaned_data)
 
    
 
