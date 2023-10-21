@@ -119,13 +119,13 @@ def data_wrangling():
 
         # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
         # df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
-        cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
+        cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
         # cleaned_data = StringIO(cleaned_data)
         # Upload to GCS
         gcs_hook.upload(
             bucket_name=GCS_BUCKET_NAME,
             object_name=GCS_KEY_NAME,
-            filename=cleaned_data,
+            filename=cleaned_df,
         )
         # psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_data)
         # cleaned_data = StringIO(cleaned_data)
