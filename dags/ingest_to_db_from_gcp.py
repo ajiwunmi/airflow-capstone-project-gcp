@@ -82,9 +82,11 @@ def data_wrangling():
         task_id='read_gcs_data',
         bucket=GCS_BUCKET_NAME,
         object_name=GCS_KEY_NAME,
-        filename=TEMP_FILE_NAME,
+        filename=GCS_FILE_NAME,
         gcp_conn_id=GCP_CONN_ID,
     )
+    # gcs_to_local.execute(context=None)
+    print(gcs_to_local)
 
     # f = GCSToLocalFilesystemOperator(
 	# bucket=MY_BUCKET,
@@ -101,15 +103,16 @@ def data_wrangling():
     # fs = gcsfs.GCSFileSystem(project=PROJECT_NAME)
     # with fs.open(f"{GCS_BUCKET_NAME}/{GCS_KEY_NAME}") as f:
     # df = pd.read_csv(f)
-    df = pd.read_csv(TEMP_FILE_NAME)
+    
+    # df = pd.read_csv(TEMP_FILE_NAME)
 
     # Data wrangling steps
-    df = df.dropna()  # Remove null values
-    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
+    # df = df.dropna()  # Remove null values
+    # df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
 
     # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
-    df.to_csv(GCS_STAGING_FILE_NAME, index=False)
-    cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
+    # df.to_csv(GCS_STAGING_FILE_NAME, index=False)
+    # cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
     # cleaned_data = StringIO(cleaned_data)
 
    
