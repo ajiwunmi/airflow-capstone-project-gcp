@@ -194,7 +194,8 @@ with DAG(
         task_id="validate_data",
         conn_id=POSTGRES_CONN_ID,
         sql=f"SELECT COUNT(*) AS total_rows FROM {SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
-        follow_task_ids_if_false=[continue_process.task_id],
+        # follow_task_ids_if_false=[continue_process.task_id],
+        follow_task_ids_if_false=[clear_table.task_id],
         follow_task_ids_if_true=[clear_table.task_id],
     )
 
