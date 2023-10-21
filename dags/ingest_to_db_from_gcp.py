@@ -167,6 +167,12 @@ with DAG(
         postgres_conn_id=POSTGRES_CONN_ID,
         sql=f"DELETE FROM {SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
     )
+
+    drop_table = PostgresOperator(
+        task_id="drop_table",
+        postgres_conn_id=POSTGRES_CONN_ID,
+        sql=f"DROP TABLE IF EXIST {SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
+    )
     continue_process = DummyOperator(task_id="continue_process")
 
     # Ingest data from GCS to Postgres
@@ -194,8 +200,8 @@ with DAG(
         task_id="validate_data",
         conn_id=POSTGRES_CONN_ID,
         sql=f"SELECT COUNT(*) AS total_rows FROM {SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
-        # follow_task_ids_if_false=[continue_process.task_id],
-        follow_task_ids_if_false=[clear_table.task_id],
+        follow_task_ids_if_false=[continue_process.task_id],
+        # follow_task_ids_if_false=[clear_table.task_id],
         follow_task_ids_if_true=[clear_table.task_id],
     )
 
@@ -204,6 +210,7 @@ with DAG(
     (
         start_workflow
         >> verify_key_existence
+        >> drop_table
         >> create_table_entity
         >> validate_data
     )
