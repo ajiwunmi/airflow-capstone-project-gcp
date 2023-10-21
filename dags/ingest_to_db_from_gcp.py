@@ -64,7 +64,7 @@ def ingest_data_from_gcs(
     """
     
 
-    gcs_hook = GCSHook(gcp_conn_id=gcp_conn_id)
+    gcs_hook = GCSHook(gcp_conn_id=POSTGRES_CONN_ID)
     psql_hook = PostgresHook(postgres_conn_id)
 
     with tempfile.NamedTemporaryFile() as tmp:
@@ -87,7 +87,8 @@ def data_wrangling():
         gcp_conn_id=GCP_CONN_ID,
     )
     # gcs_to_local.execute(context=None)
-    print(gcs_to_local)
+   
+    psql_hook = PostgresHook(postgres_conn_id)
     gcs_hook = GCSHook(gcp_conn_id=GCP_CONN_ID)
     
     with tempfile.NamedTemporaryFile() as tmp:
@@ -119,7 +120,9 @@ def data_wrangling():
         # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
         # df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
         cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
+        psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_data)
         cleaned_data = StringIO(cleaned_data)
+
 
    
 
