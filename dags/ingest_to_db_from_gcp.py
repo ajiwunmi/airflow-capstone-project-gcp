@@ -71,7 +71,7 @@ def ingest_data_from_gcs(
         gcs_hook.download(
             bucket_name=gcs_bucket, object_name=gcs_object, filename=tmp.name
         )
-        psql_hook.bulk_load(table=postgres_table, tmp_file=tmp.name)
+        # psql_hook.bulk_load(table=postgres_table, tmp_file=tmp.name)
 
 
 
@@ -122,12 +122,12 @@ def data_wrangling():
         cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
         # cleaned_data = StringIO(cleaned_data)
         # Upload to GCS
-        gcs_hook.upload(
-            bucket_name=GCS_BUCKET_NAME,
-            object_name=GCS_KEY_NAME,
-            filename=cleaned_df,
-        )
-        # psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_data)
+        # gcs_hook.upload(
+        #     bucket_name=GCS_BUCKET_NAME,
+        #     object_name=GCS_KEY_NAME,
+        #     filename=cleaned_df,
+        # )
+        psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_df)
         # cleaned_data = StringIO(cleaned_data)
 
 
