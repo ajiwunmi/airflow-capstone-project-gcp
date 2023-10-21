@@ -20,10 +20,11 @@ from airflow.providers.google.cloud.transfers.gcs_to_local import GCSToLocalFile
 from datetime import datetime
 import pandas as pd
 from io import StringIO
+import gcsfs
 
 
 
-
+PROJECT_NAME ="my-capstone-project"
 # General constants
 DAG_ID = "gcp_database_ingestion_workflow"
 STABILITY_STATE = "unstable"
@@ -95,17 +96,20 @@ def data_wrangling():
     # )
     
     # Load data from the local file and perform data wrangling
-    file_path =f'gs://{GCS_BUCKET_NAME}/{GCS_KEY_NAME}' #gs://mybucket/myfile.csv.
-    df = pd.read_csv(file_path)
+    file_path =f"gs://{GCS_BUCKET_NAME}/{GCS_KEY_NAME}" #gs://mybucket/myfile.csv.
+    fs = gcsfs.GCSFileSystem(project=PROJECT_NAME)
+    with fs.open(f"{GCS_BUCKET_NAME}/{GCS_KEY_NAME}") as f:
+        df = pd.read_csv(f)
+        # df = pd.read_csv(file_path)
 
-    # Data wrangling steps
-    df = df.dropna()  # Remove null values
-    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
+        # Data wrangling steps
+        df = df.dropna()  # Remove null values
+        df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
 
-    # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
-    df.to_csv(GCS_STAGING_FILE_NAME, index=False)
-    cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
-    # cleaned_data = StringIO(cleaned_data)
+        # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
+        df.to_csv(GCS_STAGING_FILE_NAME, index=False)
+        cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
+        # cleaned_data = StringIO(cleaned_data)
 
    
 
