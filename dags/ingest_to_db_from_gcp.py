@@ -95,7 +95,7 @@ def data_wrangling():
     # )
     
     # Load data from the local file and perform data wrangling
-    file_path = 'dataset/user_purchase.csv'
+    file_path =f'gs://{GCS_BUCKET_NAME}/{GCS_KEY_NAME}' #gs://mybucket/myfile.csv.
     df = pd.read_csv(file_path)
 
     # Data wrangling steps
