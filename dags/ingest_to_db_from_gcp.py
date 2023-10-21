@@ -119,20 +119,12 @@ def data_wrangling():
         df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
 
         # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
-        # df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
-        cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
+        df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
+        # cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
         # psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_df)
         # print( cleaned_df)
         # cleaned_data = StringIO(cleaned_data)
-        upload_to_gcs_task = GoogleCloudStorageToCsvOperator(
-            # task_id='upload_to_gcs',
-            bucket_name=GCS_BUCKET_NAME,
-            object_name='cleaned_user_purchase.csv',
-            data= cleaned_df, #cleaned_df.to_csv(index=False),
-            # bucket_object_acl='projectPrivate',
-            bucket_owner_full_control=True,
-            dag=dag,
-        )
+       
         
 
 
