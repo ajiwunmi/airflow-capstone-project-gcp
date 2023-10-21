@@ -15,6 +15,7 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.utils.dates import days_ago
 from airflow.utils.trigger_rule import TriggerRule
+from airflow.providers.google.cloud.operators.gcs import GoogleCloudStorageToCsvOperator
 
 from airflow.providers.google.cloud.transfers.gcs_to_local import GCSToLocalFilesystemOperator
 from datetime import datetime
@@ -71,7 +72,7 @@ def ingest_data_from_gcs(
         gcs_hook.download(
             bucket_name=gcs_bucket, object_name=gcs_object, filename=tmp.name
         )
-        # psql_hook.bulk_load(table=postgres_table, tmp_file=tmp.name)
+        psql_hook.bulk_load(table=postgres_table, tmp_file=tmp.name)
 
 
 
@@ -121,9 +122,18 @@ def data_wrangling():
         # df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
         cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
         # psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_df)
+        # print( cleaned_df)
         # cleaned_data = StringIO(cleaned_data)
-        with open("user_purchase.csv", mode="wb") as file:
-            file.write(cleaned_df)
+        upload_to_gcs_task = GoogleCloudStorageToCsvOperator(
+            # task_id='upload_to_gcs',
+            bucket_name=GCS_BUCKET_NAME,
+            object_name='cleaned_user_purchase.csv',
+            data= cleaned_df, #cleaned_df.to_csv(index=False),
+            # bucket_object_acl='projectPrivate',
+            bucket_owner_full_control=True,
+            dag=dag,
+        )
+        
 
 
    
