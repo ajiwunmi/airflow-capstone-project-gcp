@@ -21,6 +21,7 @@ from datetime import datetime
 import pandas as pd
 from io import StringIO
 # import gcsfs
+import tempfile
 
 
 
@@ -61,7 +62,7 @@ def ingest_data_from_gcs(
         gcp_conn_id (str): Name of the Google Cloud connection ID.
         postgres_conn_id (str): Name of the postgres connection ID.
     """
-    import tempfile
+    
 
     gcs_hook = GCSHook(gcp_conn_id=gcp_conn_id)
     psql_hook = PostgresHook(postgres_conn_id)
@@ -87,10 +88,11 @@ def data_wrangling():
     )
     # gcs_to_local.execute(context=None)
     print(gcs_to_local)
-    gcs_hook = GCSHook(gcp_conn_id=gcp_conn_id)
+    gcs_hook = GCSHook(gcp_conn_id=GCP_CONN_ID)
+    
     with tempfile.NamedTemporaryFile() as tmp:
         gcs_hook.download(
-            bucket_name=gcs_bucket, object_name=gcs_object, filename=tmp.name
+            bucket_name=GCS_BUCKET_NAME, object_name=GCS_KEY_NAME, filename=tmp.name
         )
         # f = GCSToLocalFilesystemOperator(
         # bucket=MY_BUCKET,
