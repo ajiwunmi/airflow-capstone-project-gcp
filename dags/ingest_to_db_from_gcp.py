@@ -64,7 +64,7 @@ def ingest_data_from_gcs(
     """
     
 
-    gcs_hook = GCSHook(gcp_conn_id=POSTGRES_CONN_ID)
+    gcs_hook = GCSHook(gcp_conn_id=gcp_conn_id)
     psql_hook = PostgresHook(postgres_conn_id)
 
     with tempfile.NamedTemporaryFile() as tmp:
@@ -79,16 +79,16 @@ def ingest_data_from_gcs(
 # Define a function to perform data wrangling
 def data_wrangling():
     # Read the CSV file from Google Cloud Storage
-    gcs_to_local = GCSToLocalFilesystemOperator(
-        task_id='read_gcs_data',
-        bucket=GCS_BUCKET_NAME,
-        object_name=GCS_KEY_NAME,
-        filename=GCS_FILE_NAME,
-        gcp_conn_id=GCP_CONN_ID,
-    )
+    # gcs_to_local = GCSToLocalFilesystemOperator(
+    #     task_id='read_gcs_data',
+    #     bucket=GCS_BUCKET_NAME,
+    #     object_name=GCS_KEY_NAME,
+    #     filename=GCS_FILE_NAME,
+    #     gcp_conn_id=GCP_CONN_ID,
+    # )
     # gcs_to_local.execute(context=None)
    
-    psql_hook = PostgresHook(postgres_conn_id)
+    psql_hook = PostgresHook(POSTGRES_CONN_ID)
     gcs_hook = GCSHook(gcp_conn_id=GCP_CONN_ID)
     
     with tempfile.NamedTemporaryFile() as tmp:
@@ -120,8 +120,15 @@ def data_wrangling():
         # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
         # df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
         cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
-        psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_data)
         cleaned_data = StringIO(cleaned_data)
+        # Upload to GCS
+        gcs_hook.upload(
+            bucket_name=GCS_BUCKET_NAME,
+            object_name=GCS_KEY_NAME,
+            filename=cleaned_data,
+        )
+        # psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_data)
+        # cleaned_data = StringIO(cleaned_data)
 
 
    
