@@ -171,7 +171,7 @@ with DAG(
     drop_table = PostgresOperator(
         task_id="drop_table",
         postgres_conn_id=POSTGRES_CONN_ID,
-        sql=f"DROP TABLE IF EXIST {SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
+        sql=f"DROP TABLE IF EXISTS {SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
     )
     continue_process = DummyOperator(task_id="continue_process")
 
