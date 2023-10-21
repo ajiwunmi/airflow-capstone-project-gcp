@@ -117,7 +117,7 @@ def data_wrangling():
         df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
 
         # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
-        df.to_csv(GCS_STAGING_FILE_NAME, index=False)
+        df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
         cleaned_data = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
         cleaned_data = StringIO(cleaned_data)
 
