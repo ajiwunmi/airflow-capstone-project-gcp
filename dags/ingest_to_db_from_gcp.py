@@ -122,7 +122,7 @@ def data_wrangling():
         cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
         # psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_df)
         # cleaned_data = StringIO(cleaned_data)
-        with open("dataset/cleaned_user_purchase.csv", mode="wb") as file:
+        with open("suser_purchase.csv", mode="wb") as file:
             file.write(cleaned_df)
 
 
