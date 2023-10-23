@@ -59,12 +59,13 @@ with DAG(
     # pyspark_task = DataprocSubmitJobOperator(
     # task_id="pyspark_task", job=PYSPARK_JOB, region=REGION, project_id=PROJECT_ID
     # )
-    # gcp_conn_id=GCP_CONN_ID,
+    # 
     submit_job = DataprocSubmitJobOperator(
         task_id="pyspark_task", 
         job=PYSPARK_JOB, 
         region='us-east1', 
-        project_id=PROJECT_ID
+        project_id=PROJECT_ID,
+        gcp_conn_id=GCP_CONN_ID,
     )
 
     end_process = DummyOperator(task_id="end_process")
