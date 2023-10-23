@@ -36,7 +36,7 @@ PYSPARK_JOB = {
 }
 
 with models.DAG(
-    "dataproc_airflow_gcp_to_gbq",
+    "dataproc_airflow_data_process_gcp",
     schedule_interval=None,  
     start_date=days_ago(1),
     catchup=False,
