@@ -43,13 +43,13 @@ with models.DAG(
 ) as dag:
 
     start_process = DummyOperator(task_id="start_process")
-    create_cluster = DataprocCreateClusterOperator(
-        task_id="create_cluster",
-        project_id=PROJECT_ID,
-        cluster_config=CLUSTER_CONFIG,
-        region=REGION,
-        cluster_name=CLUSTER_NAME,
-    )
+    # create_cluster = DataprocCreateClusterOperator(
+    #     task_id="create_cluster",
+    #     project_id=PROJECT_ID,
+    #     cluster_config=CLUSTER_CONFIG,
+    # #    region=REGION,
+    #     cluster_name=CLUSTER_NAME,
+    # )
 
     submit_job = DataprocSubmitJobOperator(
         task_id="pyspark_task", 
@@ -66,12 +66,12 @@ with models.DAG(
         source_format = "PARQUET"
     )
 
-    delete_cluster = DataprocDeleteClusterOperator(
-        task_id="delete_cluster", 
-        project_id=PROJECT_ID, 
-        cluster_name=CLUSTER_NAME, 
-        region=REGION
-    )
+    # delete_cluster = DataprocDeleteClusterOperator(
+    #     task_id="delete_cluster", 
+    #     project_id=PROJECT_ID, 
+    #     cluster_name=CLUSTER_NAME, 
+    # #   region=REGION
+    # )
 
     end_process = DummyOperator(task_id="end_process")
 
