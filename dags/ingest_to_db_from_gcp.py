@@ -81,7 +81,7 @@ def ingest_data_from_gcs(
 
 
 # Define a function to perform data wrangling
-def data_wrangling(**kwargs):
+def data_wrangling():
     # Read the CSV file from Google Cloud Storage
     # gcs_to_local = GCSToLocalFilesystemOperator(
     #     task_id='read_gcs_data',
@@ -135,7 +135,7 @@ def data_wrangling(**kwargs):
                 data=cleaned_data.getvalue(),
                 dag=dag,
             )
-        pg_operator.execute(context=kwargs)
+        pg_operator.execute()
        
         
 
