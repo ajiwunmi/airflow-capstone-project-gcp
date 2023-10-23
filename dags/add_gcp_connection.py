@@ -4,6 +4,7 @@ from airflow import DAG, settings
 from airflow.models import Connection
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime
+from airflow.utils.dates import days_ago
 
 from common.utils import get_default_google_cloud_connection_id
 
@@ -11,7 +12,7 @@ default_args = {
     'owner': 'airflow',
     'email': ['airflow@example.com'],
     'depends_on_past': False,
-    'start_date': datetime(2023, 01, 01),
+    'start_date': days_ago(1),
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 5,
