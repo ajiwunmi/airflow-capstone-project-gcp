@@ -10,7 +10,7 @@ from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQue
 
 CLUSTER_NAME = 'dataproc-airflow-cluster'
 REGION='us-central1' # region
-PROJECT_ID='my-capstone-project' #project name
+PROJECT_ID='my-capstone-project-401111' #project name
 PYSPARK_URI='gs://de-captone-poject-bucket/spark_scripts/process_movie_reviews.py' # spark job location in cloud storage
 
 
