@@ -1,0 +1,5 @@
+# Use the official Airflow image as a base image
+FROM apache/airflow:2.2.0
+
+# Install gcsfs
+RUN pip install gcsfs

@@ -37,6 +37,7 @@ GCP_CONN_ID = "google_cloud_conn_id"
 GCS_BUCKET_NAME = "de-captone-poject-bucket"
 GCS_KEY_NAME = "dataset/user_purchase.csv"
 GCS_FILE_NAME = "dataset/user_purchase.csv" 
+GCS_INGEST_DATA = "cleaned_user_purchase.csv" 
 TEMP_FILE_NAME = "tmp/user_purchase.csv" 
 #gs://de-captone-poject-bucket/dataset/user_purchase.csv | https://storage.cloud.google.com/de-captone-poject-bucket/dataset/user_purchase.csv
 GCS_STAGING_FILE_NAME = "staging_area/user_purchase.csv"
@@ -119,8 +120,8 @@ def data_wrangling():
         df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
 
         # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
-        df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
-        # cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
+        #df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
+        cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
         # psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_df)
         # print( cleaned_df)
         # cleaned_data = StringIO(cleaned_data)
@@ -196,7 +197,7 @@ with DAG(
             "gcp_conn_id": GCP_CONN_ID,
             "postgres_conn_id": POSTGRES_CONN_ID,
             "gcs_bucket": GCS_BUCKET_NAME,
-            "gcs_object": GCS_KEY_NAME,
+            "gcs_object": GCS_INGEST_DATA, #GCS_KEY_NAME
             "postgres_table":f"{SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
         },
         # trigger_rule=TriggerRule.ONE_SUCCESS,
