@@ -179,8 +179,8 @@ with DAG(
             detail VARCHAR(1000) DEFAULT '',
             quantity INT DEFAULT 0,
             invoice_date TIMESTAMP,
-            unit_price NUMERIC(8,3),
-            customer_id INT,
+            unit_price NUMERIC(8,3) DEFAULT 1,
+            customer_id INT DEFAULT 1,
             country VARCHAR(30)
         );
     """
