@@ -68,6 +68,7 @@ with DAG(
         region=REGION, 
         project_id=PROJECT_ID,
         gcp_conn_id=GCP_CONN_ID,
+        impersonation_chain='de-bucket-account@my-capstone-project-401111.iam.gserviceaccount.com'
     )
 
     end_process = DummyOperator(task_id="end_process")
