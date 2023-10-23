@@ -125,17 +125,9 @@ def data_wrangling():
         #df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
         cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
         cleaned_data = StringIO(cleaned_df)
+        return cleaned_data.getvalue()
 
-        # Define a Postgres operator to copy data into the PostgreSQL table
-        pg_operator = PostgresOperator(
-                task_id='copy_to_postgres',
-                sql=f'COPY {SCHEMA_NAME}.user_purchase FROM stdin CSV HEADER',
-                parameters={'table_name': 'user_purchase'},
-                conn_id=POSTGRES_CONN_ID,
-                data=cleaned_data.getvalue(),
-               
-            )
-        pg_operator.execute()
+        
        
         
 
@@ -158,13 +150,23 @@ with DAG(
         object=GCS_KEY_NAME,
     )
 
-    # Perform data wrangling
-    data_wrangling= PythonOperator(
-        task_id='data_wrangling',
-        python_callable=data_wrangling,
-        trigger_rule=TriggerRule.ONE_SUCCESS,
-        provide_context=True,
+    # Define a Postgres operator to copy data into the PostgreSQL table
+    data_wrangling = PostgresOperator(
+            task_id='copy_to_postgres',
+            sql=f'COPY {SCHEMA_NAME}.user_purchase FROM stdin CSV HEADER',
+            parameters={'table_name': 'user_purchase'},
+            conn_id=POSTGRES_CONN_ID,
+            data=data_wrangling(),
+            
     )
+    # pg_operator.execute()
+    # Perform data wrangling
+    # data_wrangling= PythonOperator(
+    #     task_id='data_wrangling',
+    #     python_callable=data_wrangling,
+    #     trigger_rule=TriggerRule.ONE_SUCCESS,
+    #     provide_context=True,
+    # )
 
     # Set up task dependencies
     # data_wrangling_task = PythonOperator(
