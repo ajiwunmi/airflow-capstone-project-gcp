@@ -10,13 +10,10 @@ default_args = {
     'depends_on_past': False   
 }
 GCP_CONN_ID = "google_cloud_conn_id"
-# CLUSTER_NAME = 'de-capstone-cluster'  REGION='us-east1' 
-CLUSTER_NAME = 'dataproc-captone-cluster'
+CLUSTER_NAME = 'capstone-cluster-1'
 REGION='us-central1' 
 PROJECT_ID='my-capstone-project-401111'
-# PYSPARK_URI='gs://dataproc-temp-us-east1-700349252747-cikki142/process_movie_reviews.py'
-# PYSPARK_URI='gs://de-captone-poject-bucket/process_movie_reviews.py'
-PYSPARK_URI='gs://de-captone-poject-bucket/sample.py'
+PYSPARK_URI='gs://de-captone-poject-bucket/spark_scripts/process_movie_reviews.py' # spark job location in cloud storage
 
 
 # CLUSTER_CONFIG = {
