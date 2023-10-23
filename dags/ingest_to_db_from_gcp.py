@@ -74,12 +74,14 @@ def ingest_data_from_gcs(
             bucket_name=gcs_bucket, object_name=gcs_object, filename=tmp.name
         )
         psql_hook.bulk_load(table=postgres_table, tmp_file=tmp.name)
+         # Define a Postgres operator to copy data into the PostgreSQL table
+        
 
 
 
 
 # Define a function to perform data wrangling
-def data_wrangling():
+def data_wrangling(**kwargs):
     # Read the CSV file from Google Cloud Storage
     # gcs_to_local = GCSToLocalFilesystemOperator(
     #     task_id='read_gcs_data',
@@ -122,9 +124,18 @@ def data_wrangling():
         # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
         #df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
         cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
-        # psql_hook.bulk_load(table=POSTGRES_TABLE_NAME, tmp_file=cleaned_df)
-        # print( cleaned_df)
-        # cleaned_data = StringIO(cleaned_data)
+        cleaned_data = StringIO(cleaned_data)
+
+        # Define a Postgres operator to copy data into the PostgreSQL table
+        pg_operator = PostgresOperator(
+                task_id='copy_to_postgres',
+                sql=f'COPY {SCHEMA_NAME}.user_purchase FROM stdin CSV HEADER',
+                parameters={'table_name': 'user_purchase'},
+                conn_id=POSTGRES_CONN_ID,
+                data=cleaned_data.getvalue(),
+                dag=dag,
+            )
+        pg_operator.execute(context=kwargs)
        
         
 
@@ -152,8 +163,17 @@ with DAG(
         task_id='data_wrangling',
         python_callable=data_wrangling,
         trigger_rule=TriggerRule.ONE_SUCCESS,
+        provide_context=True,
+        dag=dag,
     )
 
+    # Set up task dependencies
+    data_wrangling_task = PythonOperator(
+        task_id='data_wrangling_task',
+        python_callable=data_wrangling,
+        provide_context=True,
+        dag=dag,
+    )
 
     # Define schema and table creation SQL queries
     create_schema_query = f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};"
