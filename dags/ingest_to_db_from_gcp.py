@@ -133,7 +133,7 @@ def data_wrangling(**kwargs):
                 parameters={'table_name': 'user_purchase'},
                 conn_id=POSTGRES_CONN_ID,
                 data=cleaned_data.getvalue(),
-                dag=dag,
+               
             )
         pg_operator.execute(context=kwargs)
        
