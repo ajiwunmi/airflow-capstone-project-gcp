@@ -9,7 +9,7 @@ from airflow.operators.dummy import DummyOperator
 default_args = {
     'depends_on_past': False   
 }
-
+GCP_CONN_ID = "google_cloud_conn_id"
 CLUSTER_NAME = 'de-capstone-cluster'
 # REGION='us-central1'
 PROJECT_ID='my-capstone-project-401111'
@@ -41,7 +41,9 @@ with DAG(
     default_args=default_args,
     description='A simple DAG to create a Dataproc workflow',
     schedule_interval=None,
-    start_date = days_ago(2)
+    # schedule_interval="@once",
+    start_date=days_ago(1),
+    
 ) as dag:
 
     # create_cluster = DataprocCreateClusterOperator(
@@ -55,8 +57,9 @@ with DAG(
 
     submit_job = DataprocSubmitJobOperator(
         task_id="pyspark_task", 
+        gcp_conn_id=GCP_CONN_ID
         job=PYSPARK_JOB, 
-        location='us-east1', 
+        region='us-east1', 
         project_id=PROJECT_ID
     )
 
