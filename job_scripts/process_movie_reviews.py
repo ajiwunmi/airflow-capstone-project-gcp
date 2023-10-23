@@ -32,13 +32,13 @@ def func_run():
     movie_reviews_df = movie_reviews_df.withColumn("is_positive", boolean_to_integer(col("positive_review")))
 
     # Select and rename the desired columns
-    processed_df = movie_reviews_df.select("cid", "is_positive","review_id" "insert_date")
+    processed_df = movie_reviews_df.select("cid", "is_positive","review_id", "insert_date")
 
     # Save the results to a new file in GCS
     processed_df.write.csv(DATA_OUTPUT_PATH, header=True, mode="overwrite")
 
     # Stop the Spark session
     spark.stop()
-    
+
 if __name__ == "__main__":
     func_run()
