@@ -8,6 +8,7 @@ from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQue
 from airflow.operators.dummy import DummyOperator
 
 
+GCP_CONN_ID = "google_cloud_conn_id"
 CLUSTER_NAME = 'capstone-cluster-1'
 REGION='us-central1' # region
 PROJECT_ID='my-capstone-project-401111' #project name
@@ -55,7 +56,8 @@ with models.DAG(
         task_id="pyspark_task", 
         job=PYSPARK_JOB, 
         region=REGION, 
-        project_id=PROJECT_ID
+        project_id=PROJECT_ID,
+        gcp_conn_id=GCP_CONN_ID,
     )
 
     gsc_to_gbq = GCSToBigQueryOperator(
