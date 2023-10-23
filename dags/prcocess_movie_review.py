@@ -57,7 +57,7 @@ with DAG(
 
     submit_job = DataprocSubmitJobOperator(
         task_id="pyspark_task", 
-        gcp_conn_id=GCP_CONN_ID,
+        # gcp_conn_id=GCP_CONN_ID,
         job=PYSPARK_JOB, 
         region='us-east1', 
         project_id=PROJECT_ID
