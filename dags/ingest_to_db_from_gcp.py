@@ -150,15 +150,15 @@ with DAG(
         object=GCS_KEY_NAME,
     )
 
-    # Define a Postgres operator to copy data into the PostgreSQL table
-    data_wrangling = PostgresOperator(
-            task_id='copy_to_postgres',
-            sql=f'COPY {SCHEMA_NAME}.user_purchase FROM stdin CSV HEADER',
-            parameters={'table_name': 'user_purchase'},
-            conn_id=POSTGRES_CONN_ID,
-            data=data_wrangling(),
+    # # Define a Postgres operator to copy data into the PostgreSQL table
+    # data_wrangling = PostgresOperator(
+    #         task_id='copy_to_postgres',
+    #         sql=f'COPY {SCHEMA_NAME}.user_purchase FROM stdin CSV HEADER',
+    #         parameters={'table_name': 'user_purchase'},
+    #         conn_id=POSTGRES_CONN_ID,
+    #         data=data_wrangling(),
             
-    )
+    # )
     # pg_operator.execute()
     # Perform data wrangling
     # data_wrangling= PythonOperator(
@@ -249,7 +249,7 @@ with DAG(
         >> create_table_entity
         >> validate_data
     )
-    validate_data >> [clear_table, continue_process] >> data_wrangling >> ingest_data
-    data_wrangling >> ingest_data >> end_workflow
-
+    validate_data >> [clear_table, continue_process]  >> ingest_data
+    ingest_data >> end_workflow
+    # >> data_wrangling
     dag.doc_md = __doc__
