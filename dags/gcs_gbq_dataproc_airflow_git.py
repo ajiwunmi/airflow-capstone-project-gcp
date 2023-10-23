@@ -59,9 +59,9 @@ with models.DAG(
 
     gsc_to_gbq = GCSToBigQueryOperator(
         task_id="transfer_data_to_bigquery",
-        bucket="download_test_data",
-        source_objects =["output_files/*.snappy.parquet"],
-        destination_project_dataset_table ="bigquery_table", # bigquery table
+        bucket="gs://de-captone-poject-bucket/staging_area",
+        source_objects =["classified_movie_review.csv"],
+        destination_project_dataset_table ="classified_table", # bigquery table
         source_format = "PARQUET"
     )
 
