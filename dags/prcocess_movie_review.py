@@ -13,7 +13,8 @@ GCP_CONN_ID = "google_cloud_conn_id"
 CLUSTER_NAME = 'de-capstone-cluster'
 # REGION='us-central1'
 PROJECT_ID='my-capstone-project-401111'
-PYSPARK_URI='gs://dataproc-temp-us-east1-700349252747-cikki142/process_movie_reviews.py'
+# PYSPARK_URI='gs://dataproc-temp-us-east1-700349252747-cikki142/process_movie_reviews.py'
+PYSPARK_URI='gs://de-captone-poject-bucket/process_movie_reviews.py'
 
 
 # CLUSTER_CONFIG = {
@@ -36,6 +37,7 @@ PYSPARK_JOB = {
     "pyspark_job": {"main_python_file_uri": PYSPARK_URI},
 }
 
+
 with DAG(
     'dataproc-data-process',
     default_args=default_args,
@@ -54,10 +56,12 @@ with DAG(
     #     cluster_name=CLUSTER_NAME,
     # )
     start_process = DummyOperator(task_id="start_process")
-
+    # pyspark_task = DataprocSubmitJobOperator(
+    # task_id="pyspark_task", job=PYSPARK_JOB, region=REGION, project_id=PROJECT_ID
+    # )
+    # gcp_conn_id=GCP_CONN_ID,
     submit_job = DataprocSubmitJobOperator(
         task_id="pyspark_task", 
-        gcp_conn_id=GCP_CONN_ID,
         job=PYSPARK_JOB, 
         region='us-east1', 
         project_id=PROJECT_ID
