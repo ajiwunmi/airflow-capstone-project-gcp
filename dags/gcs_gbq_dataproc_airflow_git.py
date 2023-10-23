@@ -58,7 +58,7 @@ with models.DAG(
         region=REGION, 
         project_id=PROJECT_ID,
         gcp_conn_id=GCP_CONN_ID,
-        impersonation_chain='de-bucket-account@my-capstone-project-401111.iam.gserviceaccount.com'
+        impersonation_chain='de-capstone-service-account@my-capstone-project-401111.iam.gserviceaccount.com'
     )
 
     gsc_to_gbq = GCSToBigQueryOperator(
