@@ -44,40 +44,20 @@ with models.DAG(
 ) as dag:
 
     start_process = DummyOperator(task_id="start_process")
-    # create_cluster = DataprocCreateClusterOperator(
-    #     task_id="create_cluster",
-    #     project_id=PROJECT_ID,
-    #     cluster_config=CLUSTER_CONFIG,
-    # #    region=REGION,
-    #     cluster_name=CLUSTER_NAME,
-    # )
-
+   
     submit_job = DataprocSubmitJobOperator(
         task_id="pyspark_task", 
         job=PYSPARK_JOB, 
         region=REGION, 
         project_id=PROJECT_ID,
         gcp_conn_id=GCP_CONN_ID,
-        # impersonation_chain='de-capstone-service-account@my-capstone-project-401111.iam.gserviceaccount.com'
+        impersonation_chain='de-capstone-service-account@my-capstone-project-401111.iam.gserviceaccount.com'
     )
 
-    # gsc_to_gbq = GCSToBigQueryOperator(
-    #     task_id="transfer_data_to_bigquery",
-    #     bucket="gs://de-captone-poject-bucket/staging_area",
-    #     source_objects =["classified_movie_review.csv"],
-    #     destination_project_dataset_table ="classified_table", # bigquery table
-    #     source_format = "PARQUET"
-    # )
-
-    # delete_cluster = DataprocDeleteClusterOperator(
-    #     task_id="delete_cluster", 
-    #     project_id=PROJECT_ID, 
-    #     cluster_name=CLUSTER_NAME, 
-    # #   region=REGION
-    # )
+   
 
     end_process = DummyOperator(task_id="end_process")
 
     start_process >> submit_job >> end_process
 
-    # create_cluster >> submit_job >> [delete_cluster,gsc_to_gbq]
+    

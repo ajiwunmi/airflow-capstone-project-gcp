@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 DATA_SOURCE_PATH = 'gs://de-captone-poject-bucket/dataset/movie_review.csv' # location of csv data file
-DATA_OUTPUT_PATH = 'gs://de-captone-poject-bucket/staging_area/classified_movie_review.csv' # output files saving location
+DATA_OUTPUT_PATH = 'gs://de-captone-poject-bucket/staging_area' # output files saving location
 
 def func_run():
     # Initialize a Spark session

@@ -79,56 +79,6 @@ def ingest_data_from_gcs(
         
 
 
-
-
-# # Define a function to perform data wrangling
-# def data_wrangling():
-#     # Read the CSV file from Google Cloud Storage
-#     # gcs_to_local = GCSToLocalFilesystemOperator(
-#     #     task_id='read_gcs_data',
-#     #     bucket=GCS_BUCKET_NAME,
-#     #     object_name=GCS_KEY_NAME,
-#     #     filename=GCS_FILE_NAME,
-#     #     gcp_conn_id=GCP_CONN_ID,
-#     # )
-#     # gcs_to_local.execute(context=None)
-   
-#     psql_hook = PostgresHook(POSTGRES_CONN_ID)
-#     gcs_hook = GCSHook(gcp_conn_id=GCP_CONN_ID)
-    
-#     with tempfile.NamedTemporaryFile() as tmp:
-#         gcs_hook.download(
-#             bucket_name=GCS_BUCKET_NAME, object_name=GCS_KEY_NAME, filename=tmp.name
-#         )
-#         # f = GCSToLocalFilesystemOperator(
-#         # bucket=MY_BUCKET,
-#         # object_name="None",
-#         # filename="None",
-#         # store_to_xcom_key="None",
-#         # gcp_conn_id="google_cloud_default",
-#         # impersonation_chain="None",
-#         # file_encoding="utf-8",
-#         # )
-        
-#         # Load data from the local file and perform data wrangling
-#         # file_path =f"gs://{GCS_BUCKET_NAME}/{GCS_KEY_NAME}" #gs://mybucket/myfile.csv.
-#         # fs = gcsfs.GCSFileSystem(project=PROJECT_NAME)
-#         # with fs.open(f"{GCS_BUCKET_NAME}/{GCS_KEY_NAME}") as f:
-#         df = pd.read_csv(tmp.name)
-        
-#         # df = pd.read_csv(TEMP_FILE_NAME)
-
-#         # Data wrangling steps
-#         df = df.dropna()  # Remove null values
-#         df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d %H:%M')
-
-#         # Store the cleaned data back to a CSV file (you can modify this to store in a different format)
-#         #df.to_csv(f"gs://{GCS_BUCKET_NAME}/{GCS_STAGING_FILE_NAME}", index=False)
-#         cleaned_df = df.to_csv(index=False, sep=',', quoting=2, escapechar='\\', quotechar='"', encoding='utf-8')
-#         cleaned_data = StringIO(cleaned_df)
-#         return cleaned_data.getvalue()
-  
-
 with DAG(
     dag_id=DAG_ID,
     schedule_interval="@once",
