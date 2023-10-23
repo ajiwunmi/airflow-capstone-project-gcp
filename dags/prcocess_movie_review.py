@@ -15,7 +15,7 @@ CLUSTER_NAME = 'dataproc-captone-cluster'
 REGION='us-central1' 
 PROJECT_ID='my-capstone-project-401111'
 # PYSPARK_URI='gs://dataproc-temp-us-east1-700349252747-cikki142/process_movie_reviews.py'
-PYSPARK_URI='gs://de-captone-poject-bucket/process_movie_reviews.py'
+# PYSPARK_URI='gs://de-captone-poject-bucket/process_movie_reviews.py'
 PYSPARK_URI='gs://de-captone-poject-bucket/sample.py'
 
 
