@@ -81,7 +81,7 @@ def ingest_data_from_gcs(
 
 
 # Define a function to perform data wrangling
-def data_wrangling():
+def data_wrangling(**kwargs):
     # Read the CSV file from Google Cloud Storage
     # gcs_to_local = GCSToLocalFilesystemOperator(
     #     task_id='read_gcs_data',
@@ -135,7 +135,7 @@ def data_wrangling():
                 data=cleaned_data.getvalue(),
                 dag=dag,
             )
-        pg_operator.execute()
+        pg_operator.execute(context=kwargs)
        
         
 
@@ -168,12 +168,12 @@ with DAG(
     )
 
     # Set up task dependencies
-    data_wrangling_task = PythonOperator(
-        task_id='data_wrangling_task',
-        python_callable=data_wrangling,
-        provide_context=True,
-        dag=dag,
-    )
+    # data_wrangling_task = PythonOperator(
+    #     task_id='data_wrangling_task',
+    #     python_callable=data_wrangling,
+    #     provide_context=True,
+    #     dag=dag,
+    # )
 
     # Define schema and table creation SQL queries
     create_schema_query = f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};"
