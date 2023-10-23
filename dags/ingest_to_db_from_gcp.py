@@ -37,7 +37,7 @@ GCP_CONN_ID = "google_cloud_conn_id"
 GCS_BUCKET_NAME = "de-captone-poject-bucket"
 GCS_KEY_NAME = "dataset/user_purchase.csv"
 GCS_FILE_NAME = "dataset/user_purchase.csv" 
-GCS_INGEST_DATA = "staging_area/cleaned_user_purchase.csv" 
+GCS_FILE_NAME  = GCS_INGEST_DATA = "staging_area/cleaned_user_purchase.csv" 
 TEMP_FILE_NAME = "tmp/user_purchase.csv" 
 #gs://de-captone-poject-bucket/dataset/user_purchase.csv | https://storage.cloud.google.com/de-captone-poject-bucket/dataset/user_purchase.csv
 GCS_STAGING_FILE_NAME = "staging_area/user_purchase.csv"
