@@ -5,10 +5,10 @@ from airflow.providers.google.cloud.operators.dataproc import  DataprocCreateClu
 from airflow.providers.google.cloud.operators.dataproc import DataprocSubmitJobOperator
 from airflow.providers.google.cloud.operators.dataproc import DataprocDeleteClusterOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
+from airflow.operators.dummy import DummyOperator
 
 
-
-CLUSTER_NAME = 'dataproc-airflow-cluster'
+CLUSTER_NAME = 'capstone-cluster-1'
 REGION='us-central1' # region
 PROJECT_ID='my-capstone-project-401111' #project name
 PYSPARK_URI='gs://de-captone-poject-bucket/spark_scripts/process_movie_reviews.py' # spark job location in cloud storage
@@ -42,6 +42,7 @@ with models.DAG(
     tags=["dataproc_airflow"],
 ) as dag:
 
+    start_process = DummyOperator(task_id="start_process")
     create_cluster = DataprocCreateClusterOperator(
         task_id="create_cluster",
         project_id=PROJECT_ID,
@@ -72,4 +73,8 @@ with models.DAG(
         region=REGION
     )
 
-    create_cluster >> submit_job >> [delete_cluster,gsc_to_gbq]
+    end_process = DummyOperator(task_id="end_process")
+
+    start_process >> submit_job >> end_process
+
+    # create_cluster >> submit_job >> [delete_cluster,gsc_to_gbq]
