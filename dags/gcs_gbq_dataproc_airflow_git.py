@@ -58,16 +58,16 @@ with models.DAG(
         region=REGION, 
         project_id=PROJECT_ID,
         gcp_conn_id=GCP_CONN_ID,
-        impersonation_chain='de-capstone-service-account@my-capstone-project-401111.iam.gserviceaccount.com'
+        # impersonation_chain='de-capstone-service-account@my-capstone-project-401111.iam.gserviceaccount.com'
     )
 
-    gsc_to_gbq = GCSToBigQueryOperator(
-        task_id="transfer_data_to_bigquery",
-        bucket="gs://de-captone-poject-bucket/staging_area",
-        source_objects =["classified_movie_review.csv"],
-        destination_project_dataset_table ="classified_table", # bigquery table
-        source_format = "PARQUET"
-    )
+    # gsc_to_gbq = GCSToBigQueryOperator(
+    #     task_id="transfer_data_to_bigquery",
+    #     bucket="gs://de-captone-poject-bucket/staging_area",
+    #     source_objects =["classified_movie_review.csv"],
+    #     destination_project_dataset_table ="classified_table", # bigquery table
+    #     source_format = "PARQUET"
+    # )
 
     # delete_cluster = DataprocDeleteClusterOperator(
     #     task_id="delete_cluster", 
