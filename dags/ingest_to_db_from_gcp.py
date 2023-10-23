@@ -164,7 +164,6 @@ with DAG(
         python_callable=data_wrangling,
         trigger_rule=TriggerRule.ONE_SUCCESS,
         provide_context=True,
-        dag=dag,
     )
 
     # Set up task dependencies
