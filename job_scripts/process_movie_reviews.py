@@ -30,7 +30,7 @@ def func_run():
     boolean_to_integer = udf(lambda x: 1 if x else 0, IntegerType())
     movie_reviews_df = movie_reviews_df.withColumn("positive_review", when(col("review_str").contains("good"), True).otherwise(False))
     movie_reviews_df = movie_reviews_df.withColumn("is_positive", boolean_to_integer(col("positive_review")))
-
+    movie_reviews_df = movie_reviews_df.withColumnRenamed('id_review', 'review_id')
     # Select and rename the desired columns
     processed_df = movie_reviews_df.select("cid", "is_positive","review_id", "insert_date")
 
