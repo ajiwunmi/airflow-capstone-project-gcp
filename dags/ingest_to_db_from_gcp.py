@@ -73,7 +73,8 @@ def ingest_data_from_gcs(
         gcs_hook.download(
             bucket_name=gcs_bucket, object_name=gcs_object, filename=tmp.name
         )
-        psql_hook.bulk_load(table=postgres_table, tmp_file=tmp.name)
+        # psql_hook.bulk_load(table=postgres_table, tmp_file=tmp.name)
+        psql_hook.copy_expert(sql=postgres_table, filename=tmp.name)
          # Define a Postgres operator to copy data into the PostgreSQL table
         
 
@@ -213,7 +214,8 @@ with DAG(
             "postgres_conn_id": POSTGRES_CONN_ID,
             "gcs_bucket": GCS_BUCKET_NAME,
             "gcs_object": GCS_INGEST_DATA, #GCS_KEY_NAME
-            "postgres_table":f"{SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
+            "postgres_table":f'COPY {SCHEMA_NAME}.user_purchase FROM stdin CSV HEADER', #f"{SCHEMA_NAME}.{POSTGRES_TABLE_NAME}",
+            
         },
         trigger_rule=TriggerRule.ONE_SUCCESS,
     )
